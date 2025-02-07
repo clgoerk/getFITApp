@@ -8,25 +8,47 @@
 import SwiftUI
 
 struct WelcomeView: View {
-  @Binding var selectedTab: Int
-  
+  @Binding var showWelcomeView: Bool
+
   var body: some View {
     VStack {
-      Text("Welcome!")
-        .font(.title)
-        .padding()
+      Image("getFit")
+        .resizable()
+        .scaledToFit()
+        .frame(maxWidth: 350, maxHeight: 350)
+        .padding(.top, 75)
       
+      Text("""
+           Every Rep Counts
+           With getFit
+           """)
+        .font(.title2)
+        .foregroundColor(.white)
+        .multilineTextAlignment(.center)
+      
+      Spacer()
+
       Button(action: {
-        selectedTab = 0
+        showWelcomeView = false
       }) {
         Text("Get Started")
-          .font(.title2)
-          .foregroundColor(.blue)
+          .font(.headline)
+          .padding()
+          .frame(maxWidth: 200)
+          .background(Color.white)
+          .foregroundColor(.black)
+          .cornerRadius(10)
       }
+      .padding(.bottom, 75)
     }
-  }
-}
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.black)
+    .ignoresSafeArea()
+  } // body
+} // WelcomeView
 
-#Preview {
-  WelcomeView(selectedTab: .constant(9))
-}
+struct WelcomeView_Previews: PreviewProvider {
+  static var previews: some View {
+    WelcomeView(showWelcomeView: .constant(true))
+  }
+} // WelcomeView_Previews

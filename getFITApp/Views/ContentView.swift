@@ -8,34 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
-  @State private var selectedTab = 9
+  @State private var selectedTab = 0
+  @State private var showWelcomeView = true
   @State private var selectedCategory: ExerciseCategory = .chest
+  @State private var selectedExercises: [Exercise] = []
 
   var body: some View {
-    TabView(selection: $selectedTab) {
-      
-      WelcomeView(selectedTab: $selectedTab)
-        .tag(9)
-  
-      HomeView()
-        .tag(0)
-      
-      ExerciseSelectionView(category: selectedCategory.workoutCategory, selectedCategory: $selectedCategory)
-        .tag(1)
-      
-      // Excercise subviews
-      ForEach(Exercise.allCases.indices, id: \.self) { index in
-        ExerciseView(exercise: Exercise.allCases[index], selectedTab: $selectedTab)
-          .tag(index)
+    VStack {
+      if showWelcomeView {
+        WelcomeView(showWelcomeView: $showWelcomeView)
+      } else {
+        TabView(selection: $selectedTab) {
+    
+          HomeView(selectedTab: $selectedTab, selectedCategory: $selectedCategory)
+            .tag(0)
+
+          ExerciseSelectionView(category: selectedCategory, categoryExercises: selectedCategory.exercises, selectedExercises: $selectedExercises, selectedTab: $selectedTab)
+            .tag(1)
+
+          ExerciseView(selectedExercises: selectedExercises)
+            .tag(2)
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .ignoresSafeArea()
       }
-    }
-    .tabViewStyle(PageTabViewStyle())
-    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-  }
-}
+    } // if
+  } // body
+} // ContentView
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
   }
-}
+} // ContentView_Previews

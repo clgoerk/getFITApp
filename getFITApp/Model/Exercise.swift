@@ -7,50 +7,76 @@
 
 import Foundation
 
-// Workout Category with associated exercises
-struct WorkoutCategory {
-  let category: ExerciseCategory
+struct Workout {
+  let category: String
   let exercises: [Exercise]
-  
-  // Initialize with a category and its exercises
-  init(category: ExerciseCategory, exercises: [Exercise]) {
-    self.category = category
-    self.exercises = exercises
-  }
 }
-
-// Exercise Category Enum
+// Exercise Categories
 enum ExerciseCategory: String, CaseIterable {
-    case chest = "Chest"
-    case back = "Back"
-    case shoulders = "Shoulders"
-    case arms = "Arms"
-    case legs = "Legs"
-    case abs = "Abs"
+  case chest = "Chest"
+  case back = "Back"
+  case shoulders = "Shoulders"
+  case arms = "Arms"
+  case legs = "Legs"
+  case abs = "Abs"
 
-    var workoutCategory: WorkoutCategory {
-        switch self {
-        case .chest:
-            return chestExercisesCategory
-        case .back:
-            return backExercisesCategory
-        case .shoulders:
-            return shoulderExercisesCategory
-        case .arms:
-            return armExercisesCategory
-        case .legs:
-            return legExercisesCategory
-        case .abs:
-            return absExercisesCategory
-        }
+  // Exercises based on the category
+  var exercises: [Exercise] {
+    switch self {
+    case .chest:
+      return [
+        .flatBarbellPress,
+        .inclineBarbellPress,
+        .declineBarbellPress,
+        .flatDumbbellPress,
+        .inclineDumbbellPress,
+        .declineDumbbellPress,
+        .dumbbellPullover,
+        .chestFly
+      ]
+    case .back:
+      return [
+        .latPulldown,
+        .deadlift,
+        .barbellRow,
+        .dumbbellRow
+      ]
+    case .shoulders:
+      return [
+        .shoulderPress,
+        .lateralRaise,
+        .frontRaise,
+        .rearDeltoidFly
+      ]
+    case .arms:
+      return [
+        .bicepCurl,
+        .tricepExtension,
+        .hammerCurl,
+        .preacherCurl
+      ]
+    case .legs:
+      return [
+        .legPress,
+        .squat,
+        .legCurl,
+        .lunges
+      ]
+    case .abs:
+      return [
+        .crunch,
+        .legRaise,
+        .plank,
+        .bicycleCrunch
+      ]
     }
-}
+  }
+} // Workout
 
-// Exercise enum for different exercises
-enum Exercise: String, CaseIterable{
-  // Chest exercises
-  case flatBarbellBenchPress = "Flat Barbell Bench Press"
-  case inclineBarbellPress = "Incline Barbell Bench Press"
+enum Exercise: String, CaseIterable {
+  // Chest Exercises
+  case flatBarbellPress = "Flat Barbell Press"
+  case inclineBarbellPress = "Incline Barbell Press"
   case declineBarbellPress = "Decline Barbell Press"
   case flatDumbbellPress = "Flat Dumbbell Press"
   case inclineDumbbellPress = "Incline Dumbbell Press"
@@ -58,31 +84,31 @@ enum Exercise: String, CaseIterable{
   case dumbbellPullover = "Dumbbell Pullover"
   case chestFly = "Chest Fly"
   
-  // Leg exercises
+  // Leg Exercises
   case legPress = "Leg Press"
   case squat = "Squat"
   case legCurl = "Leg Curl"
   case lunges = "Lunges"
   
-  // Shoulder exercises
+  // Shoulder Exercises
   case shoulderPress = "Shoulder Press"
   case lateralRaise = "Lateral Raise"
   case frontRaise = "Front Raise"
   case rearDeltoidFly = "Rear Deltoid Fly"
   
-  // Back exercises
+  // Back Exercises
   case latPulldown = "Lat Pulldown"
   case deadlift = "Deadlift"
   case barbellRow = "Barbell Row"
   case dumbbellRow = "Dumbbell Row"
   
-  // Arm exercises
+  // Arm Exercises
   case bicepCurl = "Bicep Curl"
   case tricepExtension = "Tricep Extension"
   case hammerCurl = "Hammer Curl"
   case preacherCurl = "Preacher Curl"
   
-  // Abs exercises
+  // Abs Exercises
   case crunch = "Crunch"
   case legRaise = "Leg Raise"
   case plank = "Plank"
@@ -91,67 +117,28 @@ enum Exercise: String, CaseIterable{
   // Exercise images
   var imageName: String {
     switch self {
-    case .flatBarbellBenchPress:
-      return "Bench"
+    case .flatBarbellPress:
+      return "FBBP"
     case .inclineBarbellPress:
       return "IBBP"
     default:
       return ""
     }
   }
-}
+} // Exercise
 
-// Category arrays
-let chestExercises: [Exercise] = [
-  .flatBarbellBenchPress,
-  .inclineBarbellPress,
-  .declineBarbellPress,
-  .flatDumbbellPress,
-  .inclineDumbbellPress,
-  .declineDumbbellPress,
-  .dumbbellPullover,
-  .chestFly
-]
+let chestExercises = ExerciseCategory.chest.exercises
+let armExercises = ExerciseCategory.arms.exercises
+let legExercises = ExerciseCategory.legs.exercises
+let shoulderExercises = ExerciseCategory.shoulders.exercises
+let backExercises = ExerciseCategory.back.exercises
+let absExercises = ExerciseCategory.abs.exercises
 
-let armExercises: [Exercise] = [
-  .bicepCurl,
-  .tricepExtension,
-  .hammerCurl,
-  .preacherCurl
-]
+let chestWorkout = Workout(category: "Chest", exercises: chestExercises)
+let armWorkout = Workout(category: "Arms", exercises: armExercises)
+let legWorkout = Workout(category: "Legs", exercises: legExercises)
+let shoulderWorkout = Workout(category: "Shoulders", exercises: shoulderExercises)
+let backWorkout = Workout(category: "Back", exercises: backExercises)
+let absWorkout = Workout(category: "Abs", exercises: absExercises)
 
-let legExercises: [Exercise] = [
-  .legPress,
-  .squat,
-  .legCurl,
-  .lunges
-]
 
-let shoulderExercises: [Exercise] = [
-  .shoulderPress,
-  .lateralRaise,
-  .frontRaise,
-  .rearDeltoidFly
-]
-
-let backExercises: [Exercise] = [
-  .latPulldown,
-  .deadlift,
-  .barbellRow,
-  .dumbbellRow
-]
-
-let absExercises: [Exercise] = [
-  .crunch,
-  .legRaise,
-  .plank,
-  .bicycleCrunch
-]
-
-// Example ExerciseCategoryStruct for each category
-let chestExercisesCategory = WorkoutCategory(category: .chest, exercises: chestExercises)
-let armExercisesCategory = WorkoutCategory(category: .arms, exercises: armExercises)
-let legExercisesCategory = WorkoutCategory(category: .legs, exercises: legExercises)
-let shoulderExercisesCategory = WorkoutCategory(category: .shoulders, exercises: shoulderExercises)
-let backExercisesCategory = WorkoutCategory(category: .back, exercises: backExercises)
-let absExercisesCategory = WorkoutCategory(category: .abs, exercises: absExercises)
