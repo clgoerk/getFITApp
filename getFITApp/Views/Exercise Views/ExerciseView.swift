@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ExerciseView: View {
   var selectedExercises: [Exercise]
+  @ObservedObject var workoutStore: WorkoutStore
+  @Binding var selectedTab: Int
   @State private var selectedExercise: Exercise = .flatBarbellPress
   @State private var exercises: [ExerciseRow] = []
 
@@ -29,14 +31,13 @@ struct ExerciseView: View {
                 .background(Color.white)
                 .cornerRadius(15)
                 .padding(.bottom, 20)
-              
+
               ScrollView {
                 VStack {
-                  // Display exercise rows
                   ForEach($exercises) { $exerciseRow in
                     ExerciseRowView(exercise: $exerciseRow)
                   }
-                  
+
                   AddExerciseRowView {
                     let newIndex = (exercises.last?.index ?? 0) + 1
                     exercises.append(ExerciseRow(index: newIndex, isCompleted: false))
@@ -46,12 +47,27 @@ struct ExerciseView: View {
               Spacer()
             }
             .tag(exercise)
-          } // for
+          }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+        .onChange(of: selectedExercise) {
+          exercises = []
+        }
 
         Button(action: {
-      
+          workoutStore.saveCompletedExercises(for: selectedExercise, rows: exercises)
+        }) {
+          Text("Save Completed Sets")
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.green)
+            .cornerRadius(8)
+        }
+        .padding(.bottom, 10)
+
+        Button(action: {
+          selectedTab = 4
         }) {
           Text("View History")
             .font(.headline)
@@ -60,21 +76,24 @@ struct ExerciseView: View {
             .background(Color.blue)
             .cornerRadius(8)
         }
-        .padding(.bottom)
+        .padding(.bottom, 10)
       }
       .padding()
       .onAppear {
-        // Default to the first selected exercise
         if let firstExercise = selectedExercises.first {
           selectedExercise = firstExercise
         }
       }
     }
-  } // body
-} // ExerciseView
+  }
+}
 
 struct ExerciseView_Previews: PreviewProvider {
   static var previews: some View {
-    ExerciseView(selectedExercises: [Exercise.flatBarbellPress, Exercise.dumbbellRow])
+    ExerciseView(
+      selectedExercises: [Exercise.flatBarbellPress, Exercise.dumbbellRow],
+      workoutStore: WorkoutStore(),
+      selectedTab: .constant(3)
+    )
   }
-} // ExerciseView_Previews
+}

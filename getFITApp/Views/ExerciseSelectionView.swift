@@ -34,6 +34,7 @@ struct ExerciseSelectionView: View {
                 }
               }) {
                 HStack {
+                  // Placeholder for possible image
                   Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
@@ -62,7 +63,7 @@ struct ExerciseSelectionView: View {
         Button(action: {
           selectedTab = 2
         }) {
-          Text("Start Workout")
+          Text("View Your Workout")
             .font(.headline)
             .foregroundColor(.white)
             .padding()

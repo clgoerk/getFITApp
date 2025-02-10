@@ -125,6 +125,25 @@ enum Exercise: String, CaseIterable {
       return ""
     }
   }
+  
+  var category: ExerciseCategory {
+    switch self {
+    case .flatBarbellPress, .inclineBarbellPress, .declineBarbellPress,
+        .flatDumbbellPress, .inclineDumbbellPress, .declineDumbbellPress,
+        .dumbbellPullover, .chestFly:
+      return .chest
+    case .latPulldown, .deadlift, .barbellRow, .dumbbellRow:
+      return .back
+    case .shoulderPress, .lateralRaise, .frontRaise, .rearDeltoidFly:
+      return .shoulders
+    case .bicepCurl, .tricepExtension, .hammerCurl, .preacherCurl:
+      return .arms
+    case .legPress, .squat, .legCurl, .lunges:
+      return .legs
+    case .crunch, .legRaise, .plank, .bicycleCrunch:
+      return .abs
+    }
+  }
 } // Exercise
 
 let chestExercises = ExerciseCategory.chest.exercises
