@@ -9,7 +9,8 @@ import Foundation
 
 struct CompletedExercise: Identifiable {
   let id = UUID()
-  let rows: [ExerciseRow]  
+  let date: Date
+  let rows: [ExerciseRow]
 }
 
 class WorkoutStore: ObservableObject {
@@ -29,17 +30,12 @@ class WorkoutStore: ObservableObject {
   func saveCompletedExercises(for exercise: Exercise, rows: [ExerciseRow]) {
     let completedRows = rows.filter { $0.isCompleted }
     
-    if completedRows.isEmpty { return } 
+    if completedRows.isEmpty {
+      completedExercises.removeValue(forKey: exercise)
+      return
+    }
     
-    var existingEntries = completedExercises[exercise, default: []]
-
-    let newRows = completedRows.filter { newRow in
-      !existingEntries.contains { $0.rows.contains { $0.index == newRow.index } }
-    }
-
-    if !newRows.isEmpty {
-      existingEntries.append(CompletedExercise(rows: newRows))
-      completedExercises[exercise] = existingEntries
-    }
+    let newEntry = CompletedExercise(date: Date(), rows: completedRows)
+    completedExercises[exercise] = [newEntry]
   } // saveCompletedExercises()
 } // WorkoutStore

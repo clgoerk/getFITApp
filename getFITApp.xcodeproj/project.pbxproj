@@ -24,6 +24,7 @@
 		7CB5DA682D592C0D0002AAF1 /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB5DA672D592C0D0002AAF1 /* WorkoutView.swift */; };
 		7CB5DAD32D59416B0002AAF1 /* WorkoutStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB5DAD22D59416B0002AAF1 /* WorkoutStore.swift */; };
 		7CB5DAD52D5943A30002AAF1 /* WorkoutHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB5DAD42D5943A30002AAF1 /* WorkoutHistoryView.swift */; };
+		7CB5DB492D5F92950002AAF1 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB5DB482D5F92950002AAF1 /* DateExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		7CB5DA672D592C0D0002AAF1 /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
 		7CB5DAD22D59416B0002AAF1 /* WorkoutStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStore.swift; sourceTree = "<group>"; };
 		7CB5DAD42D5943A30002AAF1 /* WorkoutHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryView.swift; sourceTree = "<group>"; };
+		7CB5DB482D5F92950002AAF1 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				7C5BD4ED2D56654500364651 /* Views */,
 				7C5BD4EE2D56654500364651 /* Assets.xcassets */,
 				7C5BD4EF2D56654500364651 /* getFITAppApp.swift */,
+				7CB5DB482D5F92950002AAF1 /* DateExtension.swift */,
 			);
 			path = getFITApp;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				7C5BD4F62D56654500364651 /* ExerciseSelectionView.swift in Sources */,
 				7CB5DA682D592C0D0002AAF1 /* WorkoutView.swift in Sources */,
 				7C5BD4F72D56654500364651 /* ExerciseView.swift in Sources */,
+				7CB5DB492D5F92950002AAF1 /* DateExtension.swift in Sources */,
 				7C5BD4F82D56654500364651 /* HeaderView.swift in Sources */,
 				7C5BD4FA2D56654500364651 /* HomeView.swift in Sources */,
 				7C5BD4FB2D56654500364651 /* PickerView.swift in Sources */,

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExerciseSelectionView: View {
-  var category: ExerciseCategory // Store selected category
+  var category: ExerciseCategory 
   var categoryExercises: [Exercise]
   @Binding var selectedExercises: [Exercise]
   @Binding var selectedTab: Int
@@ -22,7 +22,7 @@ struct ExerciseSelectionView: View {
         // Display category
         Text("Select \(category.rawValue) Exercises")
           .font(.title)
-          .foregroundColor(.white) // Ensure text is visible
+          .foregroundColor(.white)
           .padding()
         
         ScrollView {
@@ -51,7 +51,7 @@ struct ExerciseSelectionView: View {
                     .cornerRadius(10)
                 }
               }
-              .buttonStyle(.plain) // Ensures it behaves like a simple tap
+              .buttonStyle(.plain)
             }
           }
           .padding(.horizontal)
