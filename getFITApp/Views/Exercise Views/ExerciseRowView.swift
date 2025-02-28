@@ -50,7 +50,7 @@ struct ExerciseRowView: View {
   } // body
 } // ExerciseRowView
 
-struct ExerciseRow: Identifiable {
+struct ExerciseRow: Identifiable, Codable {
   var id = UUID()
   var index: Int
   var weight: Int = 50

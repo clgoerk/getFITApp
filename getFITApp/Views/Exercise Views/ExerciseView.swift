@@ -11,89 +11,73 @@ struct ExerciseView: View {
   var selectedExercises: [Exercise]
   @ObservedObject var workoutStore: WorkoutStore
   @Binding var selectedTab: Int
-  @State private var selectedExercise: Exercise = .flatBarbellPress
-  @State private var exercises: [ExerciseRow] = []
-
+  @State private var selectedExerciseId: String?
+  
   var body: some View {
     ZStack {
       Color.black.ignoresSafeArea()
-
+      
       VStack {
-        HeaderView(selectedExercise: selectedExercise)
-
-        TabView(selection: $selectedExercise) {
-          ForEach(selectedExercises, id: \.self) { exercise in
-            VStack {
-              Image(exercise.imageName)
-                .resizable()
-                .scaledToFit()
-                .frame(height: 220)
-                .background(Color.white)
-                .cornerRadius(15)
-                .padding(.bottom, 20)
-
-              ScrollView {
-                VStack {
-                  ForEach($exercises) { $exerciseRow in
-                    ExerciseRowView(exercise: $exerciseRow)
-                  }
-
-                  AddExerciseRowView {
-                    let newIndex = (exercises.last?.index ?? 0) + 1
-                    exercises.append(ExerciseRow(index: newIndex, isCompleted: false))
-                  }
-                }
-              }
-              Spacer()
+        // If an exercise is selected display its details
+        if let selectedExercise = selectedExercises.first(where: { $0.id == selectedExerciseId }) {
+          HeaderView(selectedExercise: .constant(selectedExercise))
+          
+          TabView(selection: $selectedExerciseId) {
+            // Loop through the exercises and create a tab for each selected exercise
+            ForEach(selectedExercises, id: \.id) { exercise in
+              ExerciseDetailView(exercise: exercise, workoutStore: workoutStore)
+                .tag(exercise.id)
             }
-            .tag(exercise)
           }
-        }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-        .onChange(of: selectedExercise) {
-          exercises = []
-        }
+          .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
 
-        Button(action: {
-          workoutStore.saveCompletedExercises(for: selectedExercise, rows: exercises)
-        }) {
-          Text("Save Completed Sets")
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.green)
-            .cornerRadius(8)
+          Button(action: {
+            selectedTab = 4 // WorkoutHistoryView
+          }) {
+            Text("View History")
+              .font(.headline)
+              .foregroundColor(.white)
+              .padding()
+              .background(Color.blue)
+              .cornerRadius(8)
+          }
+          .padding()
         }
-        .padding(.bottom, 10)
-
-        Button(action: {
-          selectedTab = 4
-        }) {
-          Text("View History")
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.blue)
-            .cornerRadius(8)
-        }
-        .padding(.bottom, 10)
       }
       .padding()
       .onAppear {
-        if let firstExercise = selectedExercises.first {
-          selectedExercise = firstExercise
-        }
+        selectedExerciseId = selectedExercises.first?.id
       }
     }
-  }
-}
+  } // body
+} // ExerciseView
 
+// Preview for the ExerciseView, showing sample exercises
 struct ExerciseView_Previews: PreviewProvider {
   static var previews: some View {
     ExerciseView(
-      selectedExercises: [Exercise.flatBarbellPress, Exercise.dumbbellRow],
+      selectedExercises: [
+        Exercise(
+          id: "1",
+          name: "Flat Barbell Press",
+          bodyPart: "Chest",
+          equipment: "Barbell",
+          target: "Pectorals",
+          gifUrl: "https://example.com/image.gif",
+          instructions: ["Lie flat on a bench", "Grip the barbell", "Lower the bar to your chest", "Push the barbell up"]
+        ),
+        Exercise(
+          id: "2",
+          name: "Dumbbell Row",
+          bodyPart: "Back",
+          equipment: "Dumbbell",
+          target: "Lats",
+          gifUrl: "https://example.com/image2.gif",
+          instructions: ["Place one knee on a bench", "Hold the dumbbell", "Row the dumbbell towards your torso", "Lower the dumbbell back down"]
+        )
+      ],
       workoutStore: WorkoutStore(),
-      selectedTab: .constant(3)
+      selectedTab: .constant(3) 
     )
   }
-}
+} // ExerciseView_Previews

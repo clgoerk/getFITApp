@@ -27,7 +27,7 @@ struct PickerView: View {
     .clipped()
     .colorScheme(.dark)
   }
-}
+} // PickerView
 
 struct PickerView_Previews: PreviewProvider {
   static var previews: some View {
@@ -35,5 +35,4 @@ struct PickerView_Previews: PreviewProvider {
       .padding()
       .background(Color.black)
   }
-}
-
+} // PickerView_Previews

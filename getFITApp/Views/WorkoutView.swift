@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WorkoutView: View {
-  var selectedExercises: [Exercise]
+  @ObservedObject var viewModel: WorkoutViewModel
   @Binding var selectedTab: Int
 
   var body: some View {
@@ -18,60 +18,60 @@ struct WorkoutView: View {
       VStack {
         ScrollView {
           VStack {
-            Text("Selected Exercises")
+            Text("Todays Workout")
               .foregroundColor(.white)
               .font(.title)
               .padding(.bottom, 10)
 
-            ForEach(ExerciseCategory.allCases, id: \.self) { category in
-              let categoryExercises = selectedExercises.filter { category.exercises.contains($0) }
-              
-              if !categoryExercises.isEmpty {
-                Text("\(category.rawValue) Exercises")
-                  .font(.headline)
-                  .foregroundColor(.white)
-                  .padding(.top, 10)
-                  .frame(maxWidth: .infinity, alignment: .center)
-                
-                
-                ForEach(categoryExercises, id: \.self) { exercise in
-                  HStack {
-                    // Placeholder for possile image
-                    Image(systemName: "photo")
-                      .resizable()
-                      .scaledToFit()
-                      .frame(width: 50, height: 50)
-                      .foregroundColor(.gray)
-                      .padding(.leading)
-
-                    Text(exercise.rawValue)
-                      .font(.body)
-                      .foregroundColor(.white)
-                      .padding()
-                      .frame(maxWidth: .infinity, alignment: .leading)
-                      .background(Color.gray.opacity(0.2))
-                      .cornerRadius(10)
+            if viewModel.selectedExercises.isEmpty {
+              Text("No exercises selected")
+                .foregroundColor(.gray)
+                .padding()
+            } else {
+              ForEach(viewModel.selectedExercises, id: \.id) { exercise in
+                HStack {
+                  AsyncImage(url: URL(string: exercise.gifUrl)) { phase in
+                    switch phase {
+                    case .empty:
+                      ProgressView().frame(width: 50, height: 50)
+                    case .success(let image):
+                      image.resizable().scaledToFit().frame(width: 50, height: 50)
+                    case .failure:
+                      Image(systemName: "photo").resizable().scaledToFit().frame(width: 50, height: 50)
+                    @unknown default:
+                      EmptyView()
+                    }
                   }
-                } // for
+                  .clipShape(RoundedRectangle(cornerRadius: 10))
+                  
+                  Text(exercise.name)
+                    .font(.body)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(10)
+                }
               }
-            } // for
+            }
           }
           .padding()
         }
 
         Button(action: {
-          selectedTab = 3
+          selectedTab = 3 // ExerciseView
         }) {
           Text("Start your Workout")
             .font(.headline)
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color.blue)
+            .background(viewModel.selectedExercises.isEmpty ? Color.gray : Color.blue)
             .cornerRadius(10)
         }
         .padding(.horizontal)
         .padding(.bottom, 20)
+        .disabled(viewModel.selectedExercises.isEmpty) // Prevents navigation if no exercises are selected
       }
     }
   } // body
@@ -80,12 +80,7 @@ struct WorkoutView: View {
 struct WorkoutView_Previews: PreviewProvider {
   static var previews: some View {
     WorkoutView(
-      selectedExercises: [
-        .flatBarbellPress,
-        .squat,
-        .latPulldown,
-        .bicepCurl
-      ],
+      viewModel: WorkoutViewModel(),
       selectedTab: .constant(0)
     )
   }

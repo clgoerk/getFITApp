@@ -8,43 +8,58 @@
 import SwiftUI
 
 struct ExerciseSelectionView: View {
-  var category: ExerciseCategory 
-  var categoryExercises: [Exercise]
+  @ObservedObject var viewModel: WorkoutViewModel
   @Binding var selectedExercises: [Exercise]
   @Binding var selectedTab: Int
+  var selectedBodyPart: String
   
+  @State private var searchText: String = ""
+
+  var filteredExercises: [Exercise] {
+    viewModel.exercises.filter { $0.bodyPart == selectedBodyPart }
+      .filter { searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText) }
+  }
+
   var body: some View {
     ZStack {
-      Color.black
-        .ignoresSafeArea()
+      Color.black.ignoresSafeArea()
       
       VStack {
-        // Display category
-        Text("Select \(category.rawValue) Exercises")
+        Text("Select Exercises")
           .font(.title)
           .foregroundColor(.white)
-          .padding()
+          .padding(.top)
+        
+        // Search Bar
+        TextField("", text: $searchText, prompt: Text("Search Exercises").foregroundColor(.white.opacity(0.6)))
+          .padding(10)
+          .background(Color.white.opacity(0.2))
+          .cornerRadius(10)
+          .foregroundColor(.white) 
+          .padding(.horizontal)
         
         ScrollView {
           VStack(spacing: 10) {
-            ForEach(categoryExercises, id: \.self) { exercise in
+            ForEach(filteredExercises, id: \ .id) { exercise in
               Button(action: {
                 withAnimation {
                   exerciseSelection(exercise)
                 }
               }) {
                 HStack {
-                  // Placeholder for possible image
-                  Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.gray)
-                    .padding(.leading)
-
-                  Text(exercise.rawValue)
+                  AsyncImage(url: URL(string: exercise.gifUrl)) { phase in
+                    switch phase {
+                    case .empty: ProgressView().frame(width: 50, height: 50)
+                    case .success(let image): image.resizable().scaledToFit().frame(width: 50, height: 50)
+                    case .failure: Image(systemName: "photo").resizable().scaledToFit().frame(width: 50, height: 50)
+                    @unknown default: EmptyView()
+                    }
+                  }
+                  .clipShape(RoundedRectangle(cornerRadius: 10))
+                  
+                  Text(exercise.name)
                     .font(.body)
-                    .foregroundColor(selectedExercises.contains(exercise) ? .blue : .white)
+                    .foregroundColor(selectedExercises.contains(where: { $0.id == exercise.id }) ? .blue : .white)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.gray.opacity(0.2))
@@ -59,10 +74,7 @@ struct ExerciseSelectionView: View {
         
         Spacer()
         
-        // Start Workout button
-        Button(action: {
-          selectedTab = 2
-        }) {
+        Button(action: { selectedTab = 2 }) {
           Text("View Your Workout")
             .font(.headline)
             .foregroundColor(.white)
@@ -76,25 +88,24 @@ struct ExerciseSelectionView: View {
       }
       .padding()
     }
-  }
+  } // ExerciseSelectionView
   
-  // Add or remove exercises from selection
   private func exerciseSelection(_ exercise: Exercise) {
-    if let index = selectedExercises.firstIndex(of: exercise) {
+    if let index = selectedExercises.firstIndex(where: { $0.id == exercise.id }) {
       selectedExercises.remove(at: index)
     } else {
       selectedExercises.append(exercise)
     }
   }
-}
+} // exerciseSelection()
 
 struct ExerciseSelectionView_Previews: PreviewProvider {
   static var previews: some View {
     ExerciseSelectionView(
-      category: .chest,
-      categoryExercises: ExerciseCategory.chest.exercises,
-      selectedExercises: .constant([.flatBarbellPress]),
-      selectedTab: .constant(0)
+      viewModel: WorkoutViewModel(),
+      selectedExercises: .constant([]),
+      selectedTab: .constant(0),
+      selectedBodyPart: "Chest"
     )
   }
 } // ExerciseSelectionView_Previews
