@@ -34,5 +34,6 @@ struct GIFWebView: UIViewRepresentable {
 } // GIFWebView
 
 #Preview {
-  GIFWebView(url: URL(string: "https://example.com/animated.gif")!)
+  GIFWebView(url: URL(string: "https://i.pinimg.com/originals/77/4f/12/774f127c279efe9e57bf53b18dd036b1.gif")!)
+    .frame(width: 300, height: 300)
 } // GIFWebView_Previews

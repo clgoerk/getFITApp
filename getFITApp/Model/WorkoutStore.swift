@@ -11,7 +11,7 @@ struct CompletedExercise: Identifiable, Codable {
   var id: UUID = UUID()
   let exerciseName: String
   let date: Date
-  let rows: [ExerciseRow]
+  var rows: [ExerciseRow]
 } // CompletedExercise
 
 class WorkoutStore: ObservableObject {
@@ -40,22 +40,42 @@ class WorkoutStore: ObservableObject {
     let completedRows = completedExercise.rows.filter { $0.isCompleted }
 
     guard !completedRows.isEmpty else {
+      // If no sets are completed remove the exercise from history
       completedExercises.removeValue(forKey: exerciseId)
       saveToFile()
       return
     }
-
-    let newSession = CompletedExercise(
-      id: UUID(),
-      exerciseName: completedExercise.exerciseName,
-      date: Date(),
-      rows: completedRows
-    )
-
-    completedExercises[exerciseId, default: []].insert(newSession, at: 0) // Insert at the top
-
-    saveToFile()
-  } // saveCompletedExercises()
+    if var existingSessions = completedExercises[exerciseId] {
+      // Check if there is an existing session for today
+      if let todayIndex = existingSessions.firstIndex(where: { Calendar.current.isDate($0.date, inSameDayAs: Date()) }) {
+        // Merge new sets with existing session for today
+        var updatedSession = existingSessions[todayIndex]
+        updatedSession.rows = completedRows // Update with new sets
+        existingSessions[todayIndex] = updatedSession
+      } else {
+        // No session for today so create a new one
+        let newSession = CompletedExercise(
+          id: UUID(),
+          exerciseName: completedExercise.exerciseName,
+          date: Date(),
+          rows: completedRows
+        )
+        existingSessions.insert(newSession, at: 0) // Insert at the top
+      }
+      completedExercises[exerciseId] = existingSessions
+    } else {
+      // If no previous sessions exist create a new one
+      completedExercises[exerciseId] = [
+        CompletedExercise(
+          id: UUID(),
+          exerciseName: completedExercise.exerciseName,
+          date: Date(),
+          rows: completedRows
+        )
+      ]
+    }
+    saveToFile() // Save updates
+  } // saveCompletedExercise()
 
   func saveToFile() {
     fileManager.saveToFile(data: completedExercises, filename: filename)

@@ -15,12 +15,12 @@ class WorkoutViewModel: ObservableObject {
   
   private let apiService = ExerciseAPIService()
   private let fileManager = FileStorageManager()
-
+  
   var bodyParts: [String] {
     let parts = Set(exercises.map { $0.bodyPart })
     return parts.sorted()
-  } 
-
+  }
+  
   func loadExercises() {
     if let savedExercises = fileManager.loadExercisesFromFile(), !savedExercises.isEmpty {
       exercises = savedExercises
@@ -30,7 +30,7 @@ class WorkoutViewModel: ObservableObject {
       }
     }
   } // loadExercises
-
+  
   func fetchAndSaveExercises() async {
     do {
       let fetchedExercises = try await apiService.fetchExercises()
@@ -54,5 +54,9 @@ class WorkoutViewModel: ObservableObject {
       print("❌ Failed to refresh exercises: \(error)")
     }
   } // refreshExercises()
+  
+  func removeExercise(_ exercise: Exercise) {
+    selectedExercises.removeAll { $0.id == exercise.id }
+  } // removeExercise()
 } // WorkoutViewModel
 

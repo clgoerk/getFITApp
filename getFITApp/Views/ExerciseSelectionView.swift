@@ -12,9 +12,9 @@ struct ExerciseSelectionView: View {
   @Binding var selectedExercises: [Exercise]
   @Binding var selectedTab: Int
   var selectedBodyPart: String
-  
   @State private var searchText: String = ""
 
+  // Filters exercises based on selected body part and search text
   var filteredExercises: [Exercise] {
     viewModel.exercises.filter { $0.bodyPart == selectedBodyPart }
       .filter { searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText) }
@@ -23,8 +23,9 @@ struct ExerciseSelectionView: View {
   var body: some View {
     ZStack {
       Color.black.ignoresSafeArea()
-      
+
       VStack {
+        // Title
         Text("Select Exercises")
           .font(.title)
           .foregroundColor(.white)
@@ -35,28 +36,35 @@ struct ExerciseSelectionView: View {
           .padding(10)
           .background(Color.white.opacity(0.2))
           .cornerRadius(10)
-          .foregroundColor(.white) 
+          .foregroundColor(.white)
           .padding(.horizontal)
         
+        // List of filtered exercises
         ScrollView {
           VStack(spacing: 10) {
-            ForEach(filteredExercises, id: \ .id) { exercise in
+            ForEach(filteredExercises, id: \.id) { exercise in
               Button(action: {
                 withAnimation {
-                  exerciseSelection(exercise)
+                  exerciseSelection(exercise) // Toggle selection
                 }
               }) {
                 HStack {
-                  AsyncImage(url: URL(string: exercise.gifUrl)) { phase in
+                  // Load exercise GIF
+                  AsyncImage(url: URL(string: exercise.gifUrl), transaction: Transaction(animation: .default)) { phase in
                     switch phase {
-                    case .empty: ProgressView().frame(width: 50, height: 50)
-                    case .success(let image): image.resizable().scaledToFit().frame(width: 50, height: 50)
-                    case .failure: Image(systemName: "photo").resizable().scaledToFit().frame(width: 50, height: 50)
-                    @unknown default: EmptyView()
+                    case .empty:
+                      ProgressView().frame(width: 50, height: 50) // Loading
+                    case .success(let image):
+                      image.resizable().scaledToFit().frame(width: 50, height: 50) // Loaded image
+                    case .failure:
+                      Image(systemName: "photo").resizable().scaledToFit().frame(width: 50, height: 50) // Fallback image
+                    @unknown default:
+                      EmptyView()
                     }
                   }
                   .clipShape(RoundedRectangle(cornerRadius: 10))
                   
+                  // Exercise name with selection highlighting
                   Text(exercise.name)
                     .font(.body)
                     .foregroundColor(selectedExercises.contains(where: { $0.id == exercise.id }) ? .blue : .white)
@@ -74,6 +82,7 @@ struct ExerciseSelectionView: View {
         
         Spacer()
         
+        // Go to ExerciseView
         Button(action: { selectedTab = 2 }) {
           Text("View Your Workout")
             .font(.headline)
@@ -84,7 +93,7 @@ struct ExerciseSelectionView: View {
             .cornerRadius(10)
         }
         .padding()
-        .disabled(selectedExercises.isEmpty)
+        .disabled(selectedExercises.isEmpty) // Disable if no exercises selected
       }
       .padding()
     }
@@ -92,9 +101,9 @@ struct ExerciseSelectionView: View {
   
   private func exerciseSelection(_ exercise: Exercise) {
     if let index = selectedExercises.firstIndex(where: { $0.id == exercise.id }) {
-      selectedExercises.remove(at: index)
+      selectedExercises.remove(at: index) // Remove if already selected
     } else {
-      selectedExercises.append(exercise)
+      selectedExercises.append(exercise) // Add if not selected
     }
   }
 } // exerciseSelection()

@@ -25,12 +25,7 @@ struct ContentView: View {
           HomeView(selectedTab: $selectedTab, selectedBodyPart: $selectedBodyPart, viewModel: viewModel)
             .tag(0)
 
-          ExerciseSelectionView(
-            viewModel: viewModel,
-            selectedExercises: $viewModel.selectedExercises,
-            selectedTab: $selectedTab,
-            selectedBodyPart: selectedBodyPart
-          )
+          ExerciseSelectionView(viewModel: viewModel, selectedExercises: $viewModel.selectedExercises, selectedTab: $selectedTab, selectedBodyPart: selectedBodyPart)
             .tag(1)
           
           WorkoutView(viewModel: viewModel, selectedTab: $selectedTab)
@@ -45,9 +40,6 @@ struct ContentView: View {
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .ignoresSafeArea()
       }
-    }
-    .onAppear {
-      print(URL.documentsDirectory)
     }
   } // body
 } // ContentView

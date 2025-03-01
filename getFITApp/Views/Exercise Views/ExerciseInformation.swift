@@ -72,7 +72,7 @@ struct ExerciseInformation: View {
     bodyPart: "Chest",
     equipment: "Body weight",
     target: "Pectorals",
-    gifUrl: "https://example.com/image.gif",
+    gifUrl: "https://homeworkouts.org/wp-content/uploads/anim-push-ups.gif",
     instructions: ["Start in a plank position.", "Lower your body.", "Push back up."]
   ))
 } // ExerciseInformation_Previews
