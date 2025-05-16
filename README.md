@@ -59,4 +59,4 @@ The getFIT app provides a seamless flow from onboarding to progress tracking:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/getFIT.git
+   git clone https://github.com/clgoerk/getFITApp.git
